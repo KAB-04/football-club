@@ -112,6 +112,6 @@ npm run dev
 
 ## 👨‍💻 Authors
 
-**Kwedwo Amponsah Boateng**
-**Henry Amoquandoh**
+*Kwedwo Amponsah Boateng
+*Henry Amoquandoh
 
