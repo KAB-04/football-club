@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
 import { redirect } from 'next/navigation'
 
+import { Container } from '@/components/layout/container'
 import { getCurrentAdmin } from '@/lib/auth/admin'
 
 export const metadata: Metadata = {
@@ -15,13 +16,15 @@ export default async function AdminDashboardPage() {
   }
 
   return (
-    <main className="mx-auto flex min-h-[calc(100vh-4rem)] w-full max-w-7xl items-center px-5 py-12 sm:px-8">
-      <div className="w-full border-l-4 border-lime-500 pl-6">
-        <p className="text-sm font-bold uppercase tracking-[0.16em] text-lime-700">
-          StandFast FC Administration
-        </p>
-        <h1 className="mt-3 text-3xl font-bold">Dashboard foundation</h1>
-      </div>
+    <main className="flex min-h-[calc(100vh-4rem)] items-center py-12">
+      <Container>
+        <div className="w-full border-l-4 border-brand pl-6">
+          <p className="text-meta text-success">
+            StandFast FC Administration
+          </p>
+          <h1 className="text-page-title mt-3">Dashboard foundation</h1>
+        </div>
+      </Container>
     </main>
   )
 }

@@ -34,7 +34,6 @@ This project is being developed as a portfolio project following professional so
 
 ---
 
-## 📂 Project Structure
 
 ---
 

@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
 import { redirect } from 'next/navigation'
 
+import { ClubLogo } from '@/components/branding/club-logo'
 import { getCurrentAdmin } from '@/lib/auth/admin'
 
 import { LoginForm } from './login-form'
@@ -18,28 +19,27 @@ export default async function AdminLoginPage() {
   }
 
   return (
-    <main className="min-h-screen bg-white lg:grid lg:grid-cols-[minmax(19rem,0.8fr)_minmax(30rem,1.2fr)]">
-      <section className="relative flex min-h-56 flex-col justify-between overflow-hidden bg-zinc-950 px-6 py-8 text-white sm:px-10 lg:min-h-screen lg:px-12 lg:py-12">
+    <main className="min-h-screen bg-surface lg:grid lg:grid-cols-[minmax(19rem,0.8fr)_minmax(30rem,1.2fr)]">
+      <section className="relative flex min-h-56 flex-col justify-between overflow-hidden bg-structural px-6 py-8 text-structural-foreground sm:px-10 lg:min-h-screen lg:px-12 lg:py-12">
         <div
           aria-hidden="true"
-          className="absolute inset-y-0 right-0 w-2 bg-lime-400"
+          className="absolute inset-y-0 right-0 w-2 bg-brand"
         />
         <div className="relative">
-          <div className="inline-flex border border-zinc-700 px-4 py-3">
-            <span className="text-xl font-black tracking-[0.16em]">
-              STANDFAST FC
-            </span>
+          <div className="flex items-center gap-4">
+            <ClubLogo className="w-20 shrink-0" priority />
+            <div>
+              <p className="text-xl font-black">STANDFAST FC</p>
+              <p className="text-meta mt-1 text-brand">Horse Power</p>
+            </div>
           </div>
-          <p className="mt-3 text-xs font-semibold uppercase tracking-[0.22em] text-lime-400">
-            Horse Power
-          </p>
         </div>
 
         <div className="relative mt-12 max-w-sm lg:mt-0">
-          <p className="text-sm font-semibold uppercase tracking-[0.18em] text-lime-400">
+          <p className="text-meta text-brand">
             Secure access
           </p>
-          <h1 className="mt-3 text-3xl font-bold sm:text-4xl">
+          <h1 className="text-page-title mt-3">
             Club administration
           </h1>
         </div>
@@ -47,13 +47,13 @@ export default async function AdminLoginPage() {
 
       <section className="flex items-center px-6 py-12 sm:px-10 lg:px-16">
         <div className="mx-auto w-full max-w-md">
-          <p className="text-sm font-bold uppercase tracking-[0.16em] text-lime-700">
+          <p className="text-meta text-success">
             StandFast FC
           </p>
-          <h2 className="mt-2 text-3xl font-bold text-zinc-950">
+          <h2 className="text-page-title mt-2 text-foreground">
             Administration
           </h2>
-          <p className="mt-3 text-base leading-7 text-zinc-600">
+          <p className="mt-3 text-base leading-7 text-muted-foreground">
             Sign in to manage club content.
           </p>
           <LoginForm />

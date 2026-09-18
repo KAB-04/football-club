@@ -14,7 +14,11 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: "StandFast FC",
-  description: "StandFast Football Club",
+  description: "StandFast Football Club in Ashaiman, Ghana.",
+  icons: {
+    icon: "/standfast-fc-crest.png",
+    apple: "/standfast-fc-crest.png",
+  },
 };
 
 export default function RootLayout({
@@ -27,7 +31,7 @@ export default function RootLayout({
       lang="en"
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col">{children}</body>
+      <body className="flex min-h-full flex-col">{children}</body>
     </html>
   );
 }
