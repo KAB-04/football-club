@@ -27,7 +27,7 @@ export function formatMatchTime(matchDate: string): string {
 }
 
 export function formatScore(
-  fixture: Pick<Fixture, 'opponent_score' | 'standfast_score' | 'status'>,
+  fixture: Pick<Fixture, 'home_or_away' | 'opponent_name' | 'opponent_score' | 'standfast_score' | 'status'>,
 ): string | null {
   if (
     fixture.status !== 'completed' ||
@@ -37,13 +37,39 @@ export function formatScore(
     return null
   }
 
-  return `${fixture.standfast_score}–${fixture.opponent_score}`
+  const { home, away } = getFixturePresentation(fixture)
+  return `${home.score}-${away.score}`
 }
 
 export function getFixtureSides(
   fixture: Pick<Fixture, 'home_or_away' | 'opponent_name'>,
 ) {
+  const { home, away } = getFixturePresentation(fixture)
+  return { home: home.name, away: away.name }
+}
+
+export function getFixturePresentation(
+  fixture: Pick<Fixture, 'home_or_away' | 'opponent_name'> &
+    Partial<Pick<Fixture, 'opponent_score' | 'standfast_score'>>,
+) {
+  const standfast = { name: CLUB_NAME, score: fixture.standfast_score ?? null, standfast: true }
+  const opponent = { name: fixture.opponent_name, score: fixture.opponent_score ?? null, standfast: false }
+
   return fixture.home_or_away === 'home'
-    ? { home: CLUB_NAME, away: fixture.opponent_name }
-    : { home: fixture.opponent_name, away: CLUB_NAME }
+    ? { home: standfast, away: opponent }
+    : { home: opponent, away: standfast }
+}
+
+export function getResultOutcome(
+  fixture: Pick<Fixture, 'opponent_score' | 'standfast_score' | 'status'>,
+): 'Win' | 'Draw' | 'Loss' | null {
+  if (
+    fixture.status !== 'completed' ||
+    fixture.standfast_score === null ||
+    fixture.opponent_score === null
+  ) return null
+
+  if (fixture.standfast_score > fixture.opponent_score) return 'Win'
+  if (fixture.standfast_score < fixture.opponent_score) return 'Loss'
+  return 'Draw'
 }

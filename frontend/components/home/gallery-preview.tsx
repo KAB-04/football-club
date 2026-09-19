@@ -1,7 +1,6 @@
-/* Gallery media hosts are administrator-provided and therefore intentionally unrestricted here. */
-/* eslint-disable @next/next/no-img-element */
 import Link from 'next/link'
 
+import { GalleryMedia } from '@/components/gallery/gallery-media'
 import { Container } from '@/components/layout/container'
 import { EmptyState, ErrorState } from '@/components/ui/states'
 import type { GalleryItem } from '@/lib/data/types'
@@ -34,18 +33,14 @@ export function GalleryPreview({ items, unavailable }: { items: GalleryItem[]; u
                   className={`relative min-h-64 overflow-hidden bg-structural ${index === 0 ? 'sm:col-span-2 lg:row-span-2 lg:min-h-[33rem]' : ''}`}
                   key={item.id}
                 >
-                  {imageUrl ? (
-                    <img
+                  <div className="absolute inset-0">
+                    <GalleryMedia
                       alt={item.alt_text || item.title}
-                      className="absolute inset-0 h-full w-full object-cover"
-                      loading="lazy"
+                      className="h-full w-full"
+                      label={item.media_type === 'video' ? 'Video' : 'Photo'}
                       src={imageUrl}
                     />
-                  ) : (
-                    <div aria-hidden="true" className="absolute inset-0 flex items-center justify-center text-5xl font-black text-brand/40">
-                      {item.media_type === 'video' ? 'VIDEO' : 'SF'}
-                    </div>
-                  )}
+                  </div>
                   <div className="absolute inset-x-0 bottom-0 bg-structural/90 p-4 text-white">
                     <p className="text-meta text-brand">{item.media_type}</p>
                     <h3 className="mt-1 font-bold">{item.title}</h3>

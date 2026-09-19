@@ -1,6 +1,7 @@
 import 'server-only'
 
 import { createClient } from '@/lib/supabase/server'
+import { getDateOfBirthBoundsForAge } from '@/lib/formatters/player'
 
 import { throwPublicDataError } from './errors'
 import type { PlayerWithTeam } from './types'
@@ -11,6 +12,18 @@ const PLAYER_WITH_TEAM_COLUMNS = `
   is_active, created_at, updated_at,
   team:teams!inner(id, name, slug)
 `
+
+export type ActivePlayerSearchFilters = {
+  name?: string
+  position?: string
+  age?: number
+  referenceDate?: Date
+}
+
+export type ActivePlayerSearchResult = {
+  players: PlayerWithTeam[]
+  positions: string[]
+}
 
 export async function getActivePlayers(limit?: number): Promise<PlayerWithTeam[]> {
   const supabase = await createClient()
@@ -58,4 +71,56 @@ export async function getPlayerBySlug(
 
   if (error) throwPublicDataError('player', error)
   return data
+}
+
+export async function searchActivePlayers(
+  filters: ActivePlayerSearchFilters,
+): Promise<ActivePlayerSearchResult> {
+  const supabase = await createClient()
+  let playersQuery = supabase
+    .from('players')
+    .select(PLAYER_WITH_TEAM_COLUMNS)
+    .eq('is_active', true)
+    .order('full_name', { ascending: true })
+
+  if (filters.name) {
+    playersQuery = playersQuery.ilike('full_name', `%${escapeLikePattern(filters.name)}%`)
+  }
+
+  if (filters.position) {
+    playersQuery = playersQuery.eq('position', filters.position)
+  }
+
+  if (filters.age !== undefined) {
+    const bounds = getDateOfBirthBoundsForAge(filters.age, filters.referenceDate)
+    playersQuery = playersQuery
+      .gt('date_of_birth', bounds.after)
+      .lte('date_of_birth', bounds.onOrBefore)
+  }
+
+  const positionsQuery = supabase
+    .from('players')
+    .select('position')
+    .eq('is_active', true)
+    .order('position', { ascending: true })
+
+  const [playersResult, positionsResult] = await Promise.all([
+    playersQuery,
+    positionsQuery,
+  ])
+
+  if (playersResult.error) throwPublicDataError('player search', playersResult.error)
+  if (positionsResult.error) throwPublicDataError('player positions', positionsResult.error)
+
+  const positions = [...new Set(
+    positionsResult.data
+      .map(({ position }) => position.trim())
+      .filter(Boolean),
+  )]
+
+  return { players: playersResult.data, positions }
+}
+
+function escapeLikePattern(value: string): string {
+  return value.replace(/[\\%_]/g, '\\$&')
 }

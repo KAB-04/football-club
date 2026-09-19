@@ -1,9 +1,11 @@
 import { PublicFooter } from '@/components/layout/public-footer'
 import { PublicHeader } from '@/components/layout/public-header'
+import { getPublicSettings, type PublicSettings } from '@/lib/data/settings'
 
-export default function PublicLayout({
+export default async function PublicLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
+  const settings: PublicSettings = await getPublicSettings().catch(() => ({}))
   return (
     <div className="flex min-h-screen flex-col">
       <a
@@ -12,11 +14,11 @@ export default function PublicLayout({
       >
         Skip to content
       </a>
-      <PublicHeader />
+      <PublicHeader leagueTableUrl={settings.league_table_url?.trim() || null} />
       <main className="flex-1" id="main-content">
         {children}
       </main>
-      <PublicFooter />
+      <PublicFooter settings={settings} />
     </div>
   )
 }

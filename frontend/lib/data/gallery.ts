@@ -11,7 +11,7 @@ const GALLERY_COLUMNS = `
 `
 
 export async function getPublishedGalleryItems(
-  limit?: number,
+  options?: number | { limit?: number; type?: 'photo' | 'video' },
 ): Promise<GalleryItem[]> {
   const supabase = await createClient()
   let query = supabase
@@ -20,6 +20,13 @@ export async function getPublishedGalleryItems(
     .eq('is_published', true)
     .order('event_date', { ascending: false, nullsFirst: false })
     .order('created_at', { ascending: false })
+
+  const type = typeof options === 'number' ? undefined : options?.type
+  const limit = typeof options === 'number' ? options : options?.limit
+
+  if (type) {
+    query = query.eq('media_type', type)
+  }
 
   if (limit !== undefined) {
     query = query.limit(Math.max(1, Math.floor(limit)))

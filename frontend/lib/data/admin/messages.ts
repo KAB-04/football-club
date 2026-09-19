@@ -1,0 +1,6 @@
+import 'server-only'
+import {createClient}from'@/lib/supabase/server';import type{Database}from'@/types/database'
+export type ContactMessage=Database['public']['Tables']['contact_submissions']['Row'];export type MessageStatus='new'|'read'|'resolved';export class AdminMessageDataError extends Error{}
+export async function getAdminMessages(status?:MessageStatus):Promise<ContactMessage[]>{const s=await createClient();let q=s.from('contact_submissions').select('id, name, email, phone, subject, message, status, created_at').order('created_at',{ascending:false});if(status)q=q.eq('status',status);const{data,error}=await q;if(error)throw new AdminMessageDataError();return data}
+export async function getAdminMessageById(id:string):Promise<ContactMessage|null>{const s=await createClient();const{data,error}=await s.from('contact_submissions').select('id, name, email, phone, subject, message, status, created_at').eq('id',id).maybeSingle();if(error)throw new AdminMessageDataError();return data}
+export async function updateAdminMessageStatus(id:string,status:'read'|'resolved'){const s=await createClient();const{data,error}=await s.from('contact_submissions').update({status}).eq('id',id).select('id').single();if(error)throw new AdminMessageDataError();return data}

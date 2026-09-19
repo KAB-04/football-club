@@ -5,7 +5,6 @@ import { usePathname } from 'next/navigation'
 import { useEffect, useState } from 'react'
 
 import {
-  leagueTableUrl,
   publicNavigation,
   teamNavigation,
   type NavigationItem,
@@ -21,7 +20,7 @@ function ExternalMark() {
   return <span aria-hidden="true">↗</span>
 }
 
-export function PublicNavigation() {
+export function PublicNavigation({ leagueTableUrl }: { leagueTableUrl: string | null }) {
   const pathname = usePathname()
   const [mobileOpen, setMobileOpen] = useState(false)
   const [mobileTeamsOpen, setMobileTeamsOpen] = useState(false)

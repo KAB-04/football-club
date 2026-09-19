@@ -5,7 +5,7 @@ import { Container } from '@/components/layout/container'
 
 import { PublicNavigation } from './public-navigation'
 
-export function PublicHeader() {
+export function PublicHeader({ leagueTableUrl }: { leagueTableUrl: string | null }) {
   return (
     <header className="relative z-40 border-b-4 border-brand bg-structural text-structural-foreground">
       <Container className="flex min-h-18 items-center justify-between gap-5">
@@ -22,7 +22,7 @@ export function PublicHeader() {
             <span className="text-meta block text-brand">Horse Power</span>
           </span>
         </Link>
-        <PublicNavigation />
+        <PublicNavigation leagueTableUrl={leagueTableUrl} />
       </Container>
     </header>
   )

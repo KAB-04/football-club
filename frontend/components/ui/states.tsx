@@ -7,9 +7,11 @@ type StateProps = {
   description?: string
   action?: ReactNode
   className?: string
+  headingLevel?: 'h1' | 'h2' | 'h3'
 }
 
-function StateMessage({ title, description, action, className }: StateProps) {
+function StateMessage({ title, description, action, className, headingLevel = 'h3' }: StateProps) {
+  const Heading = headingLevel
   return (
     <div
       className={classNames(
@@ -17,7 +19,7 @@ function StateMessage({ title, description, action, className }: StateProps) {
         className,
       )}
     >
-      <h3 className="text-card-title text-foreground">{title}</h3>
+      <Heading className="text-card-title text-foreground">{title}</Heading>
       {description ? (
         <p className="mx-auto mt-2 max-w-lg text-sm leading-6 text-muted-foreground">
           {description}

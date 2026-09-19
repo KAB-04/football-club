@@ -1,6 +1,7 @@
 import 'server-only'
 
 import type { User } from '@supabase/supabase-js'
+import { cache } from 'react'
 
 import { createClient } from '@/lib/supabase/server'
 import type { Database } from '@/types/database'
@@ -22,7 +23,7 @@ export async function getCurrentUser(): Promise<User | null> {
   return error ? null : user
 }
 
-export async function getCurrentAdmin(): Promise<CurrentAdmin | null> {
+async function resolveCurrentAdmin(): Promise<CurrentAdmin | null> {
   const supabase = await createClient()
   const {
     data: { user },
@@ -47,3 +48,5 @@ export async function getCurrentAdmin(): Promise<CurrentAdmin | null> {
 
   return { user, profile }
 }
+
+export const getCurrentAdmin = cache(resolveCurrentAdmin)
